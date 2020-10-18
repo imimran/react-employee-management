@@ -1,34 +1,52 @@
-import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
+import React, { Component } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 
-
-
-export class Login extends Component {
+class Employee extends Component {
+  state = {};
 
   validate = (values) => {
     const errors = {};
- 
+    if (!values.name) {
+      errors.name = "Required";
+    } else if (values.name.length > 15) {
+      errors.name = "Must be 15 characters or less";
+    }
+
     if (!values.email) {
-      errors.email = "Please Provide Your Email";
+      errors.email = "Required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+    ) {
+      errors.email = "Invalid email department";
     }
-    if (!values.password) {
-      errors.password = "Please Provide Your Password";
+
+    if (!values.designation) {
+      errors.designation = "Required";
+    } else if (values.designation.length >= 11) {
+      errors.designation = "Must be 11 characters or less";
     }
-    return  errors
-  
+
+    if (!values.department) {
+      errors.department = "Required";
+    } else if (values.department.length < 5) {
+      errors.department = "Must be 5 characters or less";
+    }
+
+    return errors;
   };
 
   handleFormSubmit = (fData) => {
     console.log(fData);
 
     const data = {
+      name: fData.name,
       email: fData.email,
-      password: fData.password,
+      designation: fData.designation,
+      department: fData.department,
     };
     axios
-      .post("http://localhost:4000/api/auth/login", data)
+      .post("http://localhost:4000/api/employee", data)
       .then((res) => {
         console.log(res.data);
       })
@@ -47,11 +65,15 @@ export class Login extends Component {
                     alt="logo"
                   />
                 </div>
-                <h4>Hello! let's get started</h4>
-                <h6 className="font-weight-light">Sign in to continue.</h6>
+                <h4>Create Your Employee</h4>
 
                 <Formik
-                  initialValues={{ email: "", password: "" }}
+                  initialValues={{
+                    name: "",
+                    email: "",
+                    designation: "",
+                    department: "",
+                  }}
                   validate={(values) => {
                     return this.validate(values);
                   }}
@@ -61,12 +83,14 @@ export class Login extends Component {
                   ) => {
                     // console.log(values);
                     const data = {
+                      name: values.name,
                       email: values.email,
-                      password: values.password,
+                      designation: values.designation,
+                      department: values.department,
                     };
 
                     axios
-                      .post("http://localhost:4000/api/auth/login", data)
+                      .post("http://localhost:4000/api/employee", data)
                       .then((res) => {
                         console.log(res.data);
                         if (res.status !== 200) {
@@ -111,6 +135,19 @@ export class Login extends Component {
                         <input
                           type="text"
                           className="form-control form-control-lg"
+                          placeholder="Employee Name"
+                          name="name"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.name}
+                        />
+                        {errors.name && touched.name && errors.name}
+                      </div>
+
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          className="form-control form-control-lg"
                           placeholder="Email"
                           name="email"
                           onChange={handleChange}
@@ -119,17 +156,31 @@ export class Login extends Component {
                         />
                         {errors.email && touched.email && errors.email}
                       </div>
+
                       <div className="form-group">
                         <input
-                          type="password"
+                          type="text"
                           className="form-control form-control-lg"
-                          placeholder="Password"
-                          name="password"
+                          placeholder="Phone"
+                          name="designation"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.password}
+                          value={values.designation}
                         />
-                        {errors.password && touched.password && errors.password}
+                        {errors.designation && touched.designation && errors.designation}
+                      </div>
+
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          className="form-control form-control-lg"
+                          placeholder="Employee Address"
+                          name="department"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.department}
+                        />
+                        {errors.department && touched.department && errors.department}
                       </div>
 
                       <button
@@ -137,7 +188,7 @@ export class Login extends Component {
                         type="submit"
                         disabled={isSubmitting}
                       >
-                        Log In
+                        Create Employee
                       </button>
                     </form>
                   )}
@@ -151,4 +202,4 @@ export class Login extends Component {
   }
 }
 
-export default Login
+export default Employee;

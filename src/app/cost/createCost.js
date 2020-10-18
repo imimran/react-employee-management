@@ -1,34 +1,43 @@
-import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
+import React, { Component } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 
-
-
-export class Login extends Component {
+class Cost extends Component {
+  state = {};
 
   validate = (values) => {
     const errors = {};
- 
-    if (!values.email) {
-      errors.email = "Please Provide Your Email";
+    if (!values.staffSalary) {
+      errors.staffSalary = "Required";
+    } else if (values.staffSalary.length > 6) {
+      errors.staffSalary = "Must be 15 characters or less";
     }
-    if (!values.password) {
-      errors.password = "Please Provide Your Password";
+
+    if (!values.officeRent) {
+      errors.officeRent = "Required";
+    } else if (values.officeRent.length > 6) {
+      errors.officeRent = "Must be 11 characters or less";
     }
-    return  errors
-  
+
+    if (!values.utilityBill) {
+      errors.utilityBill = "Required";
+    } else if (values.utilityBill.length > 6) {
+      errors.utilityBill = "Must be 5 characters or less";
+    }
+
+    return errors;
   };
 
   handleFormSubmit = (fData) => {
     console.log(fData);
 
     const data = {
-      email: fData.email,
-      password: fData.password,
+      staffSalary: fData.staffSalary,
+      officeRent: fData.officeRent,
+      utilityBill: fData.utilityBill,
     };
     axios
-      .post("http://localhost:4000/api/auth/login", data)
+      .post("http://localhost:4000/api/Cost", data)
       .then((res) => {
         console.log(res.data);
       })
@@ -47,11 +56,14 @@ export class Login extends Component {
                     alt="logo"
                   />
                 </div>
-                <h4>Hello! let's get started</h4>
-                <h6 className="font-weight-light">Sign in to continue.</h6>
+                <h4>Create Your Cost</h4>
 
                 <Formik
-                  initialValues={{ email: "", password: "" }}
+                  initialValues={{
+                    staffSalary: "",
+                    officeRent: "",
+                    utilityBill: "",
+                  }}
                   validate={(values) => {
                     return this.validate(values);
                   }}
@@ -61,12 +73,13 @@ export class Login extends Component {
                   ) => {
                     // console.log(values);
                     const data = {
-                      email: values.email,
-                      password: values.password,
+                      staffSalary: values.staffSalary,
+                      officeRent: values.officeRent,
+                      utilityBill: values.utilityBill,
                     };
 
                     axios
-                      .post("http://localhost:4000/api/auth/login", data)
+                      .post("http://localhost:4000/api/Cost", data)
                       .then((res) => {
                         console.log(res.data);
                         if (res.status !== 200) {
@@ -109,27 +122,47 @@ export class Login extends Component {
 
                       <div className="form-group">
                         <input
-                          type="text"
+                          type="number"
                           className="form-control form-control-lg"
-                          placeholder="Email"
-                          name="email"
+                          placeholder="staffSalary"
+                          name="staffSalary"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={values.staffSalary}
                         />
-                        {errors.email && touched.email && errors.email}
+                        {errors.staffSalary &&
+                          touched.staffSalary &&
+                          errors.staffSalary}
                       </div>
+
                       <div className="form-group">
                         <input
-                          type="password"
+                          type="number"
                           className="form-control form-control-lg"
-                          placeholder="Password"
-                          name="password"
+                          placeholder="officeRent"
+                          name="officeRent"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.password}
+                          value={values.officeRent}
                         />
-                        {errors.password && touched.password && errors.password}
+                        {errors.officeRent &&
+                          touched.officeRent &&
+                          errors.officeRent}
+                      </div>
+
+                      <div className="form-group">
+                        <input
+                          type="number"
+                          className="form-control form-control-lg"
+                          placeholder="utilityBill"
+                          name="utilityBill"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.utilityBill}
+                        />
+                        {errors.utilityBill &&
+                          touched.utilityBill &&
+                          errors.utilityBill}
                       </div>
 
                       <button
@@ -137,7 +170,7 @@ export class Login extends Component {
                         type="submit"
                         disabled={isSubmitting}
                       >
-                        Log In
+                        Create Cost
                       </button>
                     </form>
                   )}
@@ -151,4 +184,4 @@ export class Login extends Component {
   }
 }
 
-export default Login
+export default Cost;

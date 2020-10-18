@@ -1,34 +1,37 @@
-import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
+import React, { Component } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 
-
-
-export class Login extends Component {
+class Attendence extends Component {
+  state = {};
 
   validate = (values) => {
     const errors = {};
- 
-    if (!values.email) {
-      errors.email = "Please Provide Your Email";
+
+    if (!values.month) {
+      errors.month = "Required";
+    } else if (values.month.length >= 11) {
+      errors.month = "Must be 11 characters or less";
     }
-    if (!values.password) {
-      errors.password = "Please Provide Your Password";
+
+    if (!values.leaves) {
+      errors.leaves = "Required";
+    } else if (values.leaves.length < 5) {
+      errors.leaves = "Must be 5 characters or less";
     }
-    return  errors
-  
+
+    return errors;
   };
 
   handleFormSubmit = (fData) => {
     console.log(fData);
 
     const data = {
-      email: fData.email,
-      password: fData.password,
+      month: fData.month,
+      leaves: fData.leaves,
     };
     axios
-      .post("http://localhost:4000/api/auth/login", data)
+      .post("http://localhost:4000/api/attendence", data)
       .then((res) => {
         console.log(res.data);
       })
@@ -47,11 +50,13 @@ export class Login extends Component {
                     alt="logo"
                   />
                 </div>
-                <h4>Hello! let's get started</h4>
-                <h6 className="font-weight-light">Sign in to continue.</h6>
+                <h4>Create Your Attendence</h4>
 
                 <Formik
-                  initialValues={{ email: "", password: "" }}
+                  initialValues={{
+                    month: "",
+                    leaves: "",
+                  }}
                   validate={(values) => {
                     return this.validate(values);
                   }}
@@ -61,12 +66,12 @@ export class Login extends Component {
                   ) => {
                     // console.log(values);
                     const data = {
-                      email: values.email,
-                      password: values.password,
+                      month: values.month,
+                      leaves: values.leaves,
                     };
 
                     axios
-                      .post("http://localhost:4000/api/auth/login", data)
+                      .post("http://localhost:4000/api/attendence", data)
                       .then((res) => {
                         console.log(res.data);
                         if (res.status !== 200) {
@@ -109,27 +114,28 @@ export class Login extends Component {
 
                       <div className="form-group">
                         <input
-                          type="text"
+                          type="number"
                           className="form-control form-control-lg"
-                          placeholder="Email"
-                          name="email"
+                          placeholder="Month"
+                          name="month"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={values.month}
                         />
-                        {errors.email && touched.email && errors.email}
+                        {errors.month && touched.month && errors.month}
                       </div>
+
                       <div className="form-group">
                         <input
-                          type="password"
+                          type="text"
                           className="form-control form-control-lg"
-                          placeholder="Password"
-                          name="password"
+                          placeholder="Leaves"
+                          name="leaves"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.password}
+                          value={values.leaves}
                         />
-                        {errors.password && touched.password && errors.password}
+                        {errors.leaves && touched.leaves && errors.leaves}
                       </div>
 
                       <button
@@ -137,7 +143,7 @@ export class Login extends Component {
                         type="submit"
                         disabled={isSubmitting}
                       >
-                        Log In
+                        Create Attendence
                       </button>
                     </form>
                   )}
@@ -151,4 +157,4 @@ export class Login extends Component {
   }
 }
 
-export default Login
+export default Attendence;

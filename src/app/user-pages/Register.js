@@ -4,17 +4,6 @@ import axios from "axios";
 import { Formik } from "formik";
 
 export class Register extends Component {
-  // state = {
-  //   username: "",
-  //   email: "",
-  //   password: "",
-  //   errors: {},
-  // };
-  // handleChange = (event) => {
-  //   this.setState({
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
 
   validate = (values) => {
     const errors = {};
@@ -117,7 +106,7 @@ export class Register extends Component {
                           setStatus(error.response.data.message);
 
                           const errorData = error.response.data.errors;
-                          
+
                           if (errorData.hasOwnProperty("email")) {
                             setErrors({ email: errorData.email });
                           }
@@ -189,6 +178,7 @@ export class Register extends Component {
                     </form>
                   )}
                 </Formik>
+
               </div>
             </div>
           </div>

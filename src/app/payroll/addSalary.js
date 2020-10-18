@@ -1,34 +1,30 @@
-import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
+import React, { Component } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 
-
-
-export class Login extends Component {
+class Payroll extends Component {
+  state = {};
 
   validate = (values) => {
     const errors = {};
- 
-    if (!values.email) {
-      errors.email = "Please Provide Your Email";
+
+    if (!values.salary) {
+      errors.salary = "Required";
+    } else if (values.salary.length >= 6) {
+      errors.salary = "Must be 11 characters or less";
     }
-    if (!values.password) {
-      errors.password = "Please Provide Your Password";
-    }
-    return  errors
-  
+
+    return errors;
   };
 
   handleFormSubmit = (fData) => {
     console.log(fData);
 
     const data = {
-      email: fData.email,
-      password: fData.password,
+      salary: fData.salary,
     };
     axios
-      .post("http://localhost:4000/api/auth/login", data)
+      .post("http://localhost:4000/api/leave-request", data)
       .then((res) => {
         console.log(res.data);
       })
@@ -47,11 +43,12 @@ export class Login extends Component {
                     alt="logo"
                   />
                 </div>
-                <h4>Hello! let's get started</h4>
-                <h6 className="font-weight-light">Sign in to continue.</h6>
+                <h4>Create Your Payroll</h4>
 
                 <Formik
-                  initialValues={{ email: "", password: "" }}
+                  initialValues={{
+                    salary: "",
+                  }}
                   validate={(values) => {
                     return this.validate(values);
                   }}
@@ -61,12 +58,11 @@ export class Login extends Component {
                   ) => {
                     // console.log(values);
                     const data = {
-                      email: values.email,
-                      password: values.password,
+                      salary: values.salary,
                     };
 
                     axios
-                      .post("http://localhost:4000/api/auth/login", data)
+                      .post("http://localhost:4000/api/leave-request", data)
                       .then((res) => {
                         console.log(res.data);
                         if (res.status !== 200) {
@@ -109,27 +105,17 @@ export class Login extends Component {
 
                       <div className="form-group">
                         <input
-                          type="text"
+                          type="number"
                           className="form-control form-control-lg"
-                          placeholder="Email"
-                          name="email"
+                          placeholder="Amount"
+                          name="salary"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={values.salary}
                         />
-                        {errors.email && touched.email && errors.email}
-                      </div>
-                      <div className="form-group">
-                        <input
-                          type="password"
-                          className="form-control form-control-lg"
-                          placeholder="Password"
-                          name="password"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.password}
-                        />
-                        {errors.password && touched.password && errors.password}
+                        {errors.salary &&
+                          touched.salary &&
+                          errors.salary}
                       </div>
 
                       <button
@@ -137,7 +123,7 @@ export class Login extends Component {
                         type="submit"
                         disabled={isSubmitting}
                       >
-                        Log In
+                        Create Payroll
                       </button>
                     </form>
                   )}
@@ -151,4 +137,4 @@ export class Login extends Component {
   }
 }
 
-export default Login
+export default Payroll;

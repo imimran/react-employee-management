@@ -1,34 +1,53 @@
-import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
+import React, { Component } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 
-
-
-export class Login extends Component {
+class Organization extends Component {
+  state = {};
 
   validate = (values) => {
     const errors = {};
- 
+    if (!values.name) {
+      errors.name = "Required";
+    } else if (values.name.length > 15) {
+      errors.name = "Must be 15 characters or less";
+    }
+
     if (!values.email) {
-      errors.email = "Please Provide Your Email";
+      errors.email = "Required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+    ) {
+      errors.email = "Invalid email address";
     }
-    if (!values.password) {
-      errors.password = "Please Provide Your Password";
+
+    if (!values.phone) {
+      errors.phone = "Required";
+    } else if (values.phone.length >= 11) {
+      errors.phone = "Must be 11 characters or less";
     }
-    return  errors
-  
+
+     if (!values.address) {
+       errors.address = "Required";
+     } else if (values.address.length < 5) {
+       errors.address = "Must be 5 characters or less";
+     }
+
+    return errors;
   };
 
   handleFormSubmit = (fData) => {
     console.log(fData);
 
     const data = {
+      name: fData.name,  
       email: fData.email,
-      password: fData.password,
+      phone: fData.phone,
+      address: fData.address
+
     };
     axios
-      .post("http://localhost:4000/api/auth/login", data)
+      .post("http://localhost:4000/api/company", data)
       .then((res) => {
         console.log(res.data);
       })
@@ -47,11 +66,15 @@ export class Login extends Component {
                     alt="logo"
                   />
                 </div>
-                <h4>Hello! let's get started</h4>
-                <h6 className="font-weight-light">Sign in to continue.</h6>
+                <h4>Create Your Organization</h4>
 
                 <Formik
-                  initialValues={{ email: "", password: "" }}
+                  initialValues={{
+                    name: "",
+                    email: "",
+                    phone: "",
+                    address: "",
+                  }}
                   validate={(values) => {
                     return this.validate(values);
                   }}
@@ -61,12 +84,14 @@ export class Login extends Component {
                   ) => {
                     // console.log(values);
                     const data = {
+                      name: values.name,
                       email: values.email,
-                      password: values.password,
+                      phone: values.phone,
+                      address: values.address,
                     };
 
                     axios
-                      .post("http://localhost:4000/api/auth/login", data)
+                      .post("http://localhost:4000/api/company", data)
                       .then((res) => {
                         console.log(res.data);
                         if (res.status !== 200) {
@@ -111,6 +136,19 @@ export class Login extends Component {
                         <input
                           type="text"
                           className="form-control form-control-lg"
+                          placeholder="Organization Name"
+                          name="name"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.name}
+                        />
+                        {errors.name && touched.name && errors.name}
+                      </div>
+
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          className="form-control form-control-lg"
                           placeholder="Email"
                           name="email"
                           onChange={handleChange}
@@ -119,17 +157,31 @@ export class Login extends Component {
                         />
                         {errors.email && touched.email && errors.email}
                       </div>
+
                       <div className="form-group">
                         <input
-                          type="password"
+                          type="number"
                           className="form-control form-control-lg"
-                          placeholder="Password"
-                          name="password"
+                          placeholder="Phone"
+                          name="phone"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.password}
+                          value={values.phone}
                         />
-                        {errors.password && touched.password && errors.password}
+                        {errors.phone && touched.phone && errors.phone}
+                      </div>
+
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          className="form-control form-control-lg"
+                          placeholder="Organization Address"
+                          name="address"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.address}
+                        />
+                        {errors.address && touched.address && errors.address}
                       </div>
 
                       <button
@@ -137,7 +189,7 @@ export class Login extends Component {
                         type="submit"
                         disabled={isSubmitting}
                       >
-                        Log In
+                        Create Organization
                       </button>
                     </form>
                   )}
@@ -151,4 +203,6 @@ export class Login extends Component {
   }
 }
 
-export default Login
+
+
+export default Organization;

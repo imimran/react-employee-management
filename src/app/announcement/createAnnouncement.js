@@ -1,34 +1,33 @@
-import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
+import React, { Component } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 
-
-
-export class Login extends Component {
+class Anouncement extends Component {
+  state = {};
 
   validate = (values) => {
     const errors = {};
- 
-    if (!values.email) {
-      errors.email = "Please Provide Your Email";
+
+    if (!values.message) {
+      errors.message = "Required";
+    } else if (values.message.length >= 11) {
+      errors.message = "Must be 11 characters or less";
     }
-    if (!values.password) {
-      errors.password = "Please Provide Your Password";
-    }
-    return  errors
-  
+
+
+
+    return errors;
   };
 
   handleFormSubmit = (fData) => {
     console.log(fData);
 
     const data = {
-      email: fData.email,
-      password: fData.password,
+      message: fData.message,
+      
     };
     axios
-      .post("http://localhost:4000/api/auth/login", data)
+      .post("http://localhost:4000/api/announcement", data)
       .then((res) => {
         console.log(res.data);
       })
@@ -47,11 +46,13 @@ export class Login extends Component {
                     alt="logo"
                   />
                 </div>
-                <h4>Hello! let's get started</h4>
-                <h6 className="font-weight-light">Sign in to continue.</h6>
+                <h4>Create Your Anouncement</h4>
 
                 <Formik
-                  initialValues={{ email: "", password: "" }}
+                  initialValues={{
+                    message: "",
+                    
+                  }}
                   validate={(values) => {
                     return this.validate(values);
                   }}
@@ -61,12 +62,12 @@ export class Login extends Component {
                   ) => {
                     // console.log(values);
                     const data = {
-                      email: values.email,
-                      password: values.password,
+                      message: values.message
+                     
                     };
 
                     axios
-                      .post("http://localhost:4000/api/auth/login", data)
+                      .post("http://localhost:4000/api/attendence", data)
                       .then((res) => {
                         console.log(res.data);
                         if (res.status !== 200) {
@@ -109,35 +110,25 @@ export class Login extends Component {
 
                       <div className="form-group">
                         <input
-                          type="text"
+                          type="number"
                           className="form-control form-control-lg"
-                          placeholder="Email"
-                          name="email"
+                          placeholder="Month"
+                          name="message"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={values.message}
                         />
-                        {errors.email && touched.email && errors.email}
+                        {errors.message && touched.message && errors.message}
                       </div>
-                      <div className="form-group">
-                        <input
-                          type="password"
-                          className="form-control form-control-lg"
-                          placeholder="Password"
-                          name="password"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.password}
-                        />
-                        {errors.password && touched.password && errors.password}
-                      </div>
+
+                     
 
                       <button
                         className="btn btn-primary"
                         type="submit"
                         disabled={isSubmitting}
                       >
-                        Log In
+                        Create Anouncement
                       </button>
                     </form>
                   )}
@@ -151,4 +142,4 @@ export class Login extends Component {
   }
 }
 
-export default Login
+export default Anouncement;
