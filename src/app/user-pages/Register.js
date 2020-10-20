@@ -2,8 +2,16 @@ import React, { Component } from "react";
 //import { Link } from 'react-router-dom';
 import axios from "axios";
 import { Formik } from "formik";
+import {connect} from "react-redux"
+import { createUser } from "../../store/actions/user";
 
 export class Register extends Component {
+
+  state = {
+    username: '',
+    email:'',
+    password:''
+  }
 
   validate = (values) => {
     const errors = {};
@@ -31,25 +39,26 @@ export class Register extends Component {
   };
 
 
-  handleFormSubmit = (fData) => {
-    console.log(fData);
+  // handleFormSubmit = (fData) => {
+  //   console.log(fData);
 
-    const data = {
-      username: fData.username,
-      email: fData.email,
-      password: fData.password,
-    };
+  //   const data = {
+  //     username: fData.username,
+  //     email: fData.email,
+  //     password: fData.password,
+  //   };
 
-    axios
-      .post("http://localhost:4000/api/user/signup", data)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch(function (error) {
-        // handle er
-        console.log(error);
-      });
-  };
+  //   axios
+  //     .post("http://localhost:4000/api/user/signup", data)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+
+  //     this.props.createUser();
+  // };
 
   render() { 
     return (
@@ -188,4 +197,10 @@ export class Register extends Component {
   }
 }
 
-export default Register;
+
+export default connect(
+  (state) => ({
+    users: state.users,
+  }),
+  { createUser }
+)(Register);

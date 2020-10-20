@@ -30,6 +30,6 @@ export const createUser = (username, email, password) => {
         email,
         password
       },
-    });
+    }); 
   };
 };
