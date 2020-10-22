@@ -1,22 +1,38 @@
 import React, { Component } from "react";
 //import { Link } from 'react-router-dom';
-import axios from "axios";
-import { Formik } from "formik";
+//import axios from "axios";
+//import { Formik } from "formik";
 import {connect} from "react-redux"
-import { createUser } from "../../store/actions/user";
+import { addUser } from "../../store/actions/user";
 
 export class Register extends Component {
-
   state = {
-    username: '',
-    email:'',
-    password:''
-  }
+    username: "",
+    email: "",
+    password: "",
+  };
+
+  handleTextChange = (event) => {
+    const {
+      target: { name, value },
+    } = event;
+    this.setState({ [name]: value });
+  };
+
+  handleOnSubmit = (event) => {
+    event.preventDefault();
+    this.props.addUser(this.state);
+    this.setState({
+      username: "",
+      email: "",
+      password: "",
+    });
+  };
 
   validate = (values) => {
     const errors = {};
-      if (!values.username) {
-    errors.username = "Required";
+    if (!values.username) {
+      errors.username = "Required";
     } else if (values.username.length > 15) {
       errors.username = "Must be 15 characters or less";
     }
@@ -37,7 +53,6 @@ export class Register extends Component {
 
     return errors;
   };
-
 
   // handleFormSubmit = (fData) => {
   //   console.log(fData);
@@ -60,7 +75,7 @@ export class Register extends Component {
   //     this.props.createUser();
   // };
 
-  render() { 
+  render() {
     return (
       <div>
         <div className="d-flex align-items-center auth px-0">
@@ -80,7 +95,48 @@ export class Register extends Component {
 
                 <p></p>
 
-                <Formik
+                <form onSubmit={this.handleOnSubmit}>
+                  <div className="form-group">
+                    <label>User Name</label>
+                    <input
+                      onChange={this.handleTextChange}
+                      value={this.state.username}
+                      type="text"
+                      name="username"
+                      className="form-control"
+                      placeholder="User Name"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input
+                      onChange={this.handleTextChange}
+                      value={this.state.email}
+                      type="text"
+                      name="email"
+                      className="form-control"
+                      placeholder="Email"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Password</label>
+                    <input
+                      onChange={this.handleTextChange}
+                      value={this.state.password}
+                      type="text"
+                      name="password"
+                      className="form-control"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <button className="btn btn-primary" type="submit">
+                      Add User
+                    </button>
+                  </div>
+                </form>
+
+                {/* <Formik
                   initialValues={{ username: "", email: "", password: "" }}
                   validate={(values) => {
                     return this.validate(values);
@@ -89,7 +145,7 @@ export class Register extends Component {
                     values,
                     { setSubmitting, setErrors, setStatus }
                   ) => {
-                    // console.log(values);
+                    
                     const data = {
                       username: values.username,
                       email: values.email,
@@ -106,8 +162,7 @@ export class Register extends Component {
                       })
                       .catch(function (error) {
                         if (error.response) {
-                          // The request was made and the server responded with a status code
-                          // that falls out of the range of 2xx
+                          
                           console.log(error.response.data);
                           console.log(error.response.status);
                           console.log(error.response.headers);
@@ -133,7 +188,7 @@ export class Register extends Component {
                     handleBlur,
                     handleSubmit,
                     isSubmitting,
-                    /* and other goodies */
+                   
                   }) => (
                     <form className="pt-3" onSubmit={handleSubmit}>
                       {!!status && <p>{status}</p>}
@@ -174,9 +229,7 @@ export class Register extends Component {
                         />
                         {errors.password && touched.password && errors.password}
                       </div>
-                      {/* <button onClick={() => console.log(this.state)}>
-                    Show Data
-                  </button> */}
+                   
                       <button
                         className="btn btn-primary"
                         type="submit"
@@ -186,8 +239,7 @@ export class Register extends Component {
                       </button>
                     </form>
                   )}
-                </Formik>
-
+                </Formik> */}
               </div>
             </div>
           </div>
@@ -198,9 +250,4 @@ export class Register extends Component {
 }
 
 
-export default connect(
-  (state) => ({
-    users: state.users,
-  }),
-  { createUser }
-)(Register);
+export default connect(null, { addUser })(Register);

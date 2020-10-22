@@ -1,5 +1,7 @@
 
-export const CREATE_USER = "CREATE_USER";
+export const ADD_USER = "ADD_USER";
+export const SET_USER = "SET_USER";
+export const LIST_USERS = "LIST_USERS";
 export const CREATE_ORGANIZATION = "CREATE_ORGANIZATION";
 export const CREATE_EMPLOYEE = "CREATE_EMPLOYEE";
 export const UPDATE_EMPLOYEE = "UPDATE_EMPLOYEE";

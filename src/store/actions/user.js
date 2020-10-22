@@ -1,35 +1,43 @@
-import {CREATE_USER} from "../types"
+import {ADD_USER, LIST_USERS, SET_USER} from "../types"
 
-export const createUser = (username, email, password) => {
-  return async (dispatch) => {
-    const response = await fetch("https://localhost:4000/api/user/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
-    });
+import axios from "axios";
 
-    if (!response.ok) {
-      throw new Error("Something went wrong creating user !");
-    }
+export const getUsers = () => {
+  return (dispatch) => {
+    axios
+      .get("http://localhost:4000/api/user/signup")
+      .then((response) => {
+        console.log(response);
+        dispatch({
+          type: LIST_USERS,
+          payload: response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+};
 
-    const resData = await response.json();
+export const setUser = (userId) => {
+  return {
+    type: SET_USER,
+    payload: userId,
+  };
+};
 
-    //console.log(resData)
-
-    dispatch({
-      type: CREATE_USER,
-      userData: {
-        id: resData.name,
-        username,
-        email,
-        password
-      },
-    }); 
+export const addUser = (userObj) => {
+  return (dispatch) => {
+    axios
+      .post("http://localhost:4000/api/user/signup", userObj)
+      .then((response) => {
+        dispatch({
+          type: ADD_USER,
+          payload: response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 };
