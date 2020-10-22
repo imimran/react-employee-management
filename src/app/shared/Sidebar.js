@@ -149,6 +149,12 @@ class Sidebar extends Component {
                 <Trans>Dashboard</Trans>
               </span>
             </Link>
+            <Link className="nav-link" to="/home">
+              <i className="mdi mdi-television menu-icon"></i>
+              <span className="menu-title">
+                <Trans>Home</Trans>
+              </span>
+            </Link>
           </li>
           {/* <li
             className={
@@ -676,9 +682,7 @@ class Sidebar extends Component {
           >
             <div
               className={
-                this.state.costMenuOpen
-                  ? "nav-link menu-expanded"
-                  : "nav-link"
+                this.state.costMenuOpen ? "nav-link menu-expanded" : "nav-link"
               }
               onClick={() => this.toggleMenuState("costMenuOpen")}
               data-toggle="collapse"

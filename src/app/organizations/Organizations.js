@@ -90,10 +90,16 @@ class Organization extends Component {
                       address: values.address,
                     };
 
+                     const config = {
+                       headers: {
+                         authorization: localStorage.getItem("token"),
+                       },
+                     };
+                     console.log(config);
                     axios
-                      .post("http://localhost:4000/api/company", data)
+                      .post("http://localhost:4000/api/company", data, config)
                       .then((res) => {
-                        console.log(res.data);
+                     
                         if (res.status !== 200) {
                           setStatus({ email: res.data.errors });
                         }

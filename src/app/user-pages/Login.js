@@ -1,26 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 //import { Link } from 'react-router-dom';
 import axios from "axios";
 import { Formik } from "formik";
 
-
-
 export class Login extends Component {
-
   validate = (values) => {
     const errors = {};
- 
+
     if (!values.email) {
       errors.email = "Please Provide Your Email";
     }
     if (!values.password) {
       errors.password = "Please Provide Your Password";
     }
-    return  errors
-  
+    return errors;
   };
 
-  handleFormSubmit = (fData) => {
+  handleOnSubmit = (fData) => {
     console.log(fData);
 
     const data = {
@@ -30,6 +26,7 @@ export class Login extends Component {
     axios
       .post("http://localhost:4000/api/auth/login", data)
       .then((res) => {
+        localStorage.setItem("token", res.data.token);
         console.log(res.data);
       })
       .catch((err) => console.log(err));
@@ -59,7 +56,6 @@ export class Login extends Component {
                     values,
                     { setSubmitting, setErrors, setStatus }
                   ) => {
-                    // console.log(values);
                     const data = {
                       email: values.email,
                       password: values.password,
@@ -69,14 +65,13 @@ export class Login extends Component {
                       .post("http://localhost:4000/api/auth/login", data)
                       .then((res) => {
                         console.log(res.data);
-                        if (res.status !== 200) {
-                          setStatus({ email: res.data.errors });
-                        }
+                        localStorage.setItem("token", res.data.token);
+                        // if (res.status !== 200) {
+                        //   setStatus({ email: res.data.errors });
+                        // }
                       })
                       .catch(function (error) {
                         if (error.response) {
-                          // The request was made and the server responded with a status code
-                          // that falls out of the range of 2xx
                           console.log(error.response.data);
                           console.log(error.response.status);
                           console.log(error.response.headers);
@@ -102,7 +97,6 @@ export class Login extends Component {
                     handleBlur,
                     handleSubmit,
                     isSubmitting,
-                    /* and other goodies */
                   }) => (
                     <form className="pt-3" onSubmit={handleSubmit}>
                       {!!status && <p>{status}</p>}
@@ -132,13 +126,14 @@ export class Login extends Component {
                         {errors.password && touched.password && errors.password}
                       </div>
 
-                      <button
+                       <button
                         className="btn btn-primary"
                         type="submit"
                         disabled={isSubmitting}
                       >
                         Log In
-                      </button>
+                      </button> 
+
                     </form>
                   )}
                 </Formik>
@@ -151,4 +146,4 @@ export class Login extends Component {
   }
 }
 
-export default Login
+export default Login;
