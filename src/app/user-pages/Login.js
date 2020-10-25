@@ -4,6 +4,8 @@ import axios from "axios";
 import { Formik } from "formik";
 
 export class Login extends Component {
+
+
   validate = (values) => {
     const errors = {};
 
@@ -16,6 +18,7 @@ export class Login extends Component {
     return errors;
   };
 
+
   handleOnSubmit = (fData) => {
     console.log(fData);
 
@@ -26,7 +29,7 @@ export class Login extends Component {
     axios
       .post("http://localhost:4000/api/auth/login", data)
       .then((res) => {
-        localStorage.setItem("token", res.data.token);
+        //localStorage.setItem("token", res.data.token);
         console.log(res.data);
       })
       .catch((err) => console.log(err));
@@ -47,6 +50,7 @@ export class Login extends Component {
                 <h4>Hello! let's get started</h4>
                 <h6 className="font-weight-light">Sign in to continue.</h6>
 
+
                 <Formik
                   initialValues={{ email: "", password: "" }}
                   validate={(values) => {
@@ -64,8 +68,9 @@ export class Login extends Component {
                     axios
                       .post("http://localhost:4000/api/auth/login", data)
                       .then((res) => {
-                        console.log(res.data);
-                        localStorage.setItem("token", res.data.token);
+                        
+                        console.log(res.data.token);
+                        localStorage.setItem("token", res.results.data);
                         // if (res.status !== 200) {
                         //   setStatus({ email: res.data.errors });
                         // }
@@ -147,3 +152,5 @@ export class Login extends Component {
 }
 
 export default Login;
+
+

@@ -1,4 +1,11 @@
-import {ADD_USER, LIST_USERS, SET_USER} from "../types"
+import {
+  ADD_USER,
+  LIST_USERS,
+  SET_USER,
+  USER_LOGIN_FAIL,
+  USER_LOGIN_REQUEST,
+  USER_LOGIN_SUCCESS,
+} from "../types";
 
 import axios from "axios";
 
@@ -40,4 +47,36 @@ export const addUser = (userObj) => {
         console.log(error);
       });
   };
+};
+
+export const login = (email, password) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_LOGIN_REQUEST,
+    });
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.post(
+      "http://localhost:4000/api/auth/login",
+      { email, password },
+      config
+    );
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+    localStorage.setItem("userInfo", JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_LOGIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
 };

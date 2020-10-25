@@ -1,4 +1,4 @@
-import { ADD_USER, LIST_USERS, SET_USER } from "../types";
+import { ADD_USER, LIST_USERS, SET_USER, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT } from "../types";
 
 const initialState = {
   users: [],
@@ -26,5 +26,27 @@ export const userReducer = (state = initialState, action) => {
   }
 };
 
-export default userReducer;
+export const userLoginReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case USER_LOGIN_REQUEST:
+      return {
+        loading: true,
+        ...state,
+        users: action.payload,
+      };
+    case USER_LOGIN_SUCCESS:
+      return { ...state, loading: true, userId: action.payload };
+    case USER_LOGIN_FAIL:
+      return {
+        ...state,
+        loading: true,
+        users: action.payload,
+      };
+    case USER_LOGOUT:
+    default:
+      return state;
+  }
+};
+
+
 
