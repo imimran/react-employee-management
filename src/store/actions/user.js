@@ -1,10 +1,11 @@
 import {
   ADD_USER,
   LIST_USERS,
-  SET_USER,
+  USER_LOGOUT,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
+  USER_AUTH_STATUS
 } from "../types";
 
 import axios from "axios";
@@ -12,7 +13,7 @@ import axios from "axios";
 export const getUsers = () => {
   return (dispatch) => {
     axios
-      .get("http://localhost:4000/api/user/signup")
+      .get("http://localhost:4000/api/user")
       .then((response) => {
         console.log(response);
         dispatch({
@@ -26,12 +27,6 @@ export const getUsers = () => {
   };
 };
 
-export const setUser = (userId) => {
-  return {
-    type: SET_USER,
-    payload: userId,
-  };
-};
 
 export const addUser = (userObj) => {
   return (dispatch) => {
@@ -70,6 +65,7 @@ export const login = (email, password) => async (dispatch) => {
       payload: data,
     });
     localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("authToken", data.results.data);
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -79,4 +75,11 @@ export const login = (email, password) => async (dispatch) => {
           : error.message,
     });
   }
+};
+
+export const logout = () => (dispatch) => {
+  localStorage.removeItem("userInfo");
+  dispatch({ type: USER_LOGOUT });
+
+  document.location.href = "/login";
 };

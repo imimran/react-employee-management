@@ -2,31 +2,40 @@ import React, { useState, useEffect } from 'react';
 //import { Link } from 'react-router-dom';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import Message from './Message';
-// import Loader from '../components/Loader'
-// import FormContainer from '../components/FormContainer'
+//import Message from './Message';
+
 import { login } from '../../store/actions/user';
 
 const Login = ({ location, history }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginStatus, setLoginStatus] = useState(false);
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin);
+  const userLogin = useSelector((state) => state.userLogin );
+  const authToken = localStorage.getItem('authToken');
+  console.log(authToken);
   const { error, userInfo } = userLogin;
 
-  //const redirect = location.search ? location.search.split('=')[1] : '/';
+  const redirect = location.search
+    ? location.search.split("=")[1]
+    : "/organizations/create";
 
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     history.push(redirect);
-  //   }
-  // }, [history, userInfo, redirect]);
+  useEffect(() => {
+    if (authToken) {
+      setLoginStatus(true);
+      history.push(redirect);
+    }
+  }, [history, authToken, userInfo, redirect]);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(login(email, password));
+    await dispatch(login(email, password));
+    if (loginStatus) {
+      console.log("Login");
+      history.push(redirect);
+    }
   };
 
   return (
@@ -34,7 +43,7 @@ const Login = ({ location, history }) => {
       <Row className='justify-content-md-center'>
         <Col xs={12} md={6}>
           <h1>Sign In</h1>
-          {error && <Message variant='danger'>{error}</Message>}
+          {/* {error && <Message variant='danger'>{error}</Message>} */}
 
           <Form onSubmit={submitHandler}>
             <Form.Group controlId='email'>

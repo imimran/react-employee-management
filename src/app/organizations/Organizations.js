@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrganization } from "../../store/actions/organization";
 
 class Organization extends Component {
   state = {};
@@ -27,31 +29,33 @@ class Organization extends Component {
       errors.phone = "Must be 11 characters or less";
     }
 
-     if (!values.address) {
-       errors.address = "Required";
-     } else if (values.address.length < 5) {
-       errors.address = "Must be 5 characters or less";
-     }
+    if (!values.address) {
+      errors.address = "Required";
+    } else if (values.address.length < 5) {
+      errors.address = "Must be 5 characters or less";
+    }
 
     return errors;
   };
 
   handleFormSubmit = (fData) => {
     console.log(fData);
+    const dispatch = useDispatch();
+    const createOrganization = useSelector((state) => state.createOrganization);
 
-    const data = {
-      name: fData.name,  
-      email: fData.email,
-      phone: fData.phone,
-      address: fData.address
+    // const data = {
+    //   name: fData.name,
+    //   email: fData.email,
+    //   phone: fData.phone,
+    //   address: fData.address
 
-    };
-    axios
-      .post("http://localhost:4000/api/company", data)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => console.log(err));
+    // };
+    // axios
+    //   .post("http://localhost:4000/api/company", data)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //   })
+    //   .catch((err) => console.log(err));
   };
   render() {
     return (
@@ -82,43 +86,42 @@ class Organization extends Component {
                     values,
                     { setSubmitting, setErrors, setStatus }
                   ) => {
-                    // console.log(values);
-                    const data = {
-                      name: values.name,
-                      email: values.email,
-                      phone: values.phone,
-                      address: values.address,
-                    };
-
-                   
-                     
-                    axios
-                      .post("http://localhost:4000/api/company", data)
-                      .then((res) => {
-                        if (res.status !== 200) {
-                          setStatus({ email: res.data.errors });
-                        }
-                      })
-
-                      
-                      .catch(function (error) {
-                        if (error.response) {
-                          // The request was made and the server responded with a status code
-                          // that falls out of the range of 2xx
-                          console.log(error.response.data);
-                          console.log(error.response.status);
-                          console.log(error.response.headers);
-
-                          setStatus(error.response.data.errors);
-
-                          const errorData = error.response.data.errors;
-
-                          if (errorData.hasOwnProperty("email")) {
-                            setErrors({ email: errorData.email });
+                    console.log(values);
+                      const data = {
+                        name: values.name,
+                        email: values.email,
+                        phone: values.phone,
+                        address: values.address,
+                      };
+                      axios
+                        .post("http://localhost:4000/api/company", data, {
+                          headers: {
+                            "Content-type": "application/json",
+                            'authorization': localStorage.getItem("authToken")
+                          },
+                        })
+                        .then((res) => {
+                          console.log(res.data);
+                          localStorage.getItem("token", res.data);
+                          if (res.status !== 200) {
+                            setStatus({ email: res.data.errors });
                           }
-                        }
-                      });
-                    return;
+                        })
+                        .catch(function (error) {
+                          if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                            setStatus(error.response.data.errors);
+                            const errorData = error.response.data.errors;
+                            if (errorData.hasOwnProperty("email")) {
+                              setErrors({ email: errorData.email });
+                            }
+                          }
+                        });
+                      return;
                   }}
                 >
                   {({
@@ -205,7 +208,5 @@ class Organization extends Component {
     );
   }
 }
-
-
 
 export default Organization;

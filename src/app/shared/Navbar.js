@@ -9,6 +9,12 @@ class Navbar extends Component {
   toggleRightSidebar() {
     document.querySelector('.right-sidebar').classList.toggle('open');
   }
+
+  logout(){
+    localStorage.removeItem('userInfo')
+    localStorage.removeItem('authToken')
+  }
+
   render () {  
     return (
       <nav className="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
@@ -178,7 +184,7 @@ class Navbar extends Component {
                   <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center border-0" onClick={evt =>evt.preventDefault()}>
                     <Trans>Check Inbox</Trans>
                   </Dropdown.Item>
-                  <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center border-0" onClick={evt =>evt.preventDefault()}>
+                  <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center border-0" onClick={this.logout()}>
                     <Trans>Sign Out</Trans>
                   </Dropdown.Item>
                 </Dropdown.Menu>
