@@ -3,10 +3,12 @@ import { Link, withRouter } from 'react-router-dom';
 import { Collapse } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux'
 
 class Sidebar extends Component {
-  state = {};
-
+  state = {
+    
+  }
   toggleMenuState(menuState) {
     if (this.state[menuState]) {
       this.setState({[menuState] : false});
